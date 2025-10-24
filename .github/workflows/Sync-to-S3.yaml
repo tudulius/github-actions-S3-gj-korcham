@@ -17,5 +17,18 @@ jobs:
         aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         aws-region: ap-northeast-2  # Change this to your region of your bucket
    
-    - name: Sync to S3
-      run: aws s3 cp . s3://icshin-web/s3-lab/ --recursive --include="*.css,*.html,*.js"  --exclude="*" # Change this to your bucket name
+    - name: Install AWS CLI
+      run: sudo apt-get install -y awscli
+
+#    - name: Sync to S3
+#      run: aws s3 sync . s3://icshin-web/s3-lab/ --recursive --include="*.css,*.html,*.js"  --exclude="*" # Change this to your bucket name
+
+    - name: Deploy to S3
+      run: |
+        echo "Syncing specific files to S3..."
+        aws s3 cp . s3://icshin-web/s3-lab/ --recursive \
+        --exclude "*" \
+        --include "*.html" \
+        --include "*.css" \
+        --include "*.js"
+        echo "Deployment complete."
