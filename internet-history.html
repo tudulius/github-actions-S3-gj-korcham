@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>인터랙티브 인터넷 역사</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Chosen Palette: Calm Neutrals with a Tech Blue Accent -->
+    <!-- Application Structure Plan: The application uses a vertical timeline structure to present the chronological history of the internet. A sticky top navigation allows users to either scroll sequentially or jump to specific eras. This structure is more engaging than a static report and provides both guided (scrolling) and direct (nav clicks) exploration paths, making the historical narrative easy to follow and access. -->
+    <!-- Visualization & Content Choices: 
+    - Section 1 (ARPANET): Goal: Explain packet switching. Method: Animated Canvas diagram showing nodes and data packets. Interaction: Button to start simulation. Justification: Visually demonstrates a core technical concept. Library: Vanilla JS Canvas.
+    - Section 2 (WWW): Goal: Show network interconnection and hypertext. Method: Interactive HTML/JS diagram. Interaction: Click to connect networks and follow links. Justification: Simplifies abstract concepts of protocols and links. Library: Vanilla JS.
+    - Section 3 (Dot-com Bubble): Goal: Visualize the boom-bust cycle. Method: Line chart. Interaction: Hover for details. Justification: A line chart is ideal for showing trends over time. Library: Chart.js.
+    - Section 4 (Mobile/Social): Goal: Show the shift to mobile internet usage. Method: Stacked bar chart. Interaction: Hover for data. Justification: Compares total growth while showing changing composition. Library: Chart.js.
+    - Section 5 (Future): Goal: Organize future concepts. Method: Interactive concept map. Interaction: Click buttons to reveal info. Justification: Allows user-led exploration of complex, related topics. Library: Vanilla JS.
+    - Confirmed no SVG/Mermaid used. -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f8f9fa;
+            color: #212529;
+        }
+        .timeline-item {
+            position: relative;
+            padding-left: 50px;
+            padding-bottom: 50px;
+        }
+        .timeline-item:last-child {
+            padding-bottom: 0;
+        }
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: 20px;
+            top: 5px;
+            width: 2px;
+            height: 100%;
+            background-color: #dee2e6;
+        }
+        .timeline-item::after {
+            content: '';
+            position: absolute;
+            left: 13px;
+            top: 5px;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background-color: #f8f9fa;
+            border: 2px solid #4f46e5;
+            z-index: 1;
+        }
+        .nav-link.active {
+            font-weight: 700;
+            color: #4f46e5;
+            background-color: #e0e7ff;
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 300px;
+            max-height: 400px;
+        }
+        @media (min-width: 768px) {
+            .chart-container {
+                height: 350px;
+            }
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+
+    <header class="bg-white shadow-md sticky top-0 z-50">
+        <div class="container mx-auto px-4 py-3">
+            <h1 class="text-3xl font-bold text-center text-indigo-600">인터넷의 역사</h1>
+            <nav id="navbar" class="mt-2">
+                <ul class="flex flex-wrap justify-center gap-2 md:gap-4">
+                    <li><a href="#section-1" class="nav-link text-sm md:text-base px-3 py-2 rounded-md transition duration-300 hover:bg-indigo-100">1. 초기</a></li>
+                    <li><a href="#section-2" class="nav-link text-sm md:text-base px-3 py-2 rounded-md transition duration-300 hover:bg-indigo-100">2. 확장</a></li>
+                    <li><a href="#section-3" class="nav-link text-sm md:text-base px-3 py-2 rounded-md transition duration-300 hover:bg-indigo-100">3. 대중화</a></li>
+                    <li><a href="#section-4" class="nav-link text-sm md:text-base px-3 py-2 rounded-md transition duration-300 hover:bg-indigo-100">4. 혁신</a></li>
+                    <li><a href="#section-5" class="nav-link text-sm md:text-base px-3 py-2 rounded-md transition duration-300 hover:bg-indigo-100">5. 현재와 미래</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container mx-auto px-4 py-8 md:py-12">
+        <div class="max-w-4xl mx-auto">
+            <div id="section-1" class="timeline-item scroll-mt-24">
+                <h2 class="text-2xl font-bold text-indigo-700 mb-4">1. 초기: ARPANET과 컴퓨터 네트워킹의 탄생</h2>
+                <div class="prose max-w-none text-lg">
+                    <p>이 섹션에서는 인터넷의 시초가 된 ARPANET의 탄생 배경과 핵심 기술인 패킷 교환 방식에 대해 알아봅니다. 1960년대 냉전 시대, 군사적 목적으로 시작된 이 네트워크가 어떻게 오늘날 글로벌 인터넷의 기반이 되었는지 그 첫걸음을 확인할 수 있습니다. 아래의 시뮬레이션을 통해 데이터를 작은 조각(패킷)으로 나누어 여러 경로로 전송하는 원리를 직관적으로 이해해 보세요.</p>
+                    <p>1960년대 미국 국방부의 고등 연구 계획국(ARPA)은 핵 공격에도 통신망이 마비되지 않도록 분산형 컴퓨터 네트워크를 연구했습니다. 이 연구의 결과로 **1969년 10월 29일**, 최초의 컴퓨터 네트워크인 **ARPANET**이 탄생했습니다. 당시 캘리포니아 대학교 로스앤젤레스(UCLA)와 스탠퍼드 연구소(SRI)의 컴퓨터가 연결되어 'LOGIN'이라는 메시지를 주고받는 역사적인 사건이 일어났죠. 비록 'O'와 'G'까지만 전송되고 시스템이 다운되었지만, 이는 현대 인터넷의 시작을 알리는 중요한 순간이었습니다. 초기의 ARPANET은 주로 군사 및 학술 연구 목적으로 사용되었으며, 이 때 개발된 **패킷 교환(packet switching)** 기술은 오늘날 인터넷 통신 방식의 핵심 원리가 되었습니다. 이 기술은 데이터를 작은 패킷으로 나누어 전송하고, 목적지에서 다시 조립하는 방식으로, 네트워크 장애에 유연하게 대처할 수 있게 해 주었습니다.</p>
+                </div>
+                 <div class="mt-8 p-4 border rounded-lg bg-white shadow">
+                    <h3 class="font-semibold text-center mb-2">패킷 교환 시뮬레이션</h3>
+                    <canvas id="packet-canvas" class="w-full h-64 mx-auto block max-w-md bg-gray-100 rounded"></canvas>
+                    <div class="text-center mt-4">
+                        <button id="start-packet-sim" class="bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700 transition">시뮬레이션 시작</button>
+                    </div>
+                </div>
+            </div>
+
+            <div id="section-2" class="timeline-item scroll-mt-24">
+                <h2 class="text-2xl font-bold text-indigo-700 mb-4">2. 확장: TCP/IP와 월드 와이드 웹의 등장</h2>
+                <div class="prose max-w-none text-lg">
+                    <p>서로 다른 네트워크들을 하나로 묶는 표준 약속(프로토콜)인 TCP/IP의 등장과, 우리가 오늘날 웹서핑을 가능하게 한 월드 와이드 웹의 탄생 과정을 살펴봅니다. 이 시기의 혁신이 어떻게 흩어져 있던 정보들을 하이퍼링크라는 거미줄로 연결하여 거대한 정보의 바다를 만들었는지, 아래의 인터랙티브 다이어그램을 통해 직접 확인해보세요.</p>
+                    <p>ARPANET이 성장하면서, 다양한 종류의 네트워크를 하나로 묶을 필요성이 대두되었습니다. 이러한 문제 해결을 위해 **1970년대** 빈트 서프(Vint Cerf)와 밥 칸(Bob Kahn)은 **TCP/IP(Transmission Control Protocol/Internet Protocol)**라는 통신 프로토콜을 개발했습니다. 이 프로토콜은 서로 다른 네트워크들이 마치 하나의 네트워크처럼 통신할 수 있게 해주는 **표준 언어** 역할을 했습니다. **1983년 1월 1일**, ARPANET은 공식적으로 TCP/IP로 전환되었고, 이 날은 **'인터넷의 생일'**로 불리기도 합니다. 하지만 진정한 대중화를 이끈 것은 **1989년** 스위스 CERN 연구소의 **팀 버너스 리(Tim Berners-Lee)**가 제안한 **월드 와이드 웹(World Wide Web)**이었습니다. 그는 정보를 쉽게 공유하고 연결하기 위해 **HTML(HyperText Markup Language)**, **HTTP(HyperText Transfer Protocol)**, **URL(Uniform Resource Locator)**이라는 세 가지 핵심 기술을 개발했습니다. 이 기술들은 문서를 서로 연결하고, 누구나 쉽게 접근할 수 있는 **정보의 거미줄**을 만들었습니다.</p>
+                </div>
+                <div class="mt-8 p-4 border rounded-lg bg-white shadow">
+                    <h3 class="font-semibold text-center mb-4">WWW 개념 인터랙션</h3>
+                    <div id="www-interactive" class="relative w-full h-64 max-w-lg mx-auto flex justify-around items-center">
+                        <div id="net-a" class="border-2 border-dashed border-blue-400 p-4 rounded-lg text-center">네트워크 A<div class="page bg-blue-100 p-2 m-1 rounded">Doc 1</div></div>
+                        <div id="net-b" class="border-2 border-dashed border-green-400 p-4 rounded-lg text-center">네트워크 B<div id="doc2" class="page bg-green-100 p-2 m-1 rounded cursor-pointer hover:bg-green-200">Doc 2 (클릭)</div></div>
+                        <div id="tcp-line" class="absolute top-1/2 left-1/2 h-1 bg-gray-400 transition-all duration-1000" style="width: 0; transform: translate(-50%, -50%);"></div>
+                        <div id="http-line" class="absolute top-1/2 left-1/2 h-0.5 bg-red-500 origin-left transition-all duration-1000" style="width:0; transform: rotate(0deg);"></div>
+                    </div>
+                     <div class="text-center mt-4">
+                        <button id="connect-tcp" class="bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700 transition">TCP/IP 연결</button>
+                    </div>
+                </div>
+            </div>
+
+            <div id="section-3" class="timeline-item scroll-mt-24">
+                <h2 class="text-2xl font-bold text-indigo-700 mb-4">3. 대중화: 웹 브라우저와 닷컴 버블</h2>
+                <div class="prose max-w-none text-lg">
+                    <p>인터넷이 전문가의 영역을 넘어 대중에게 확산된 결정적 계기는 그래픽 사용자 인터페이스(GUI)를 갖춘 웹 브라우저의 등장이었습니다. 이로 인해 인터넷의 상업적 가능성에 대한 기대감이 폭발하며 '닷컴 버블'이라는 거대한 투자 열풍과 붕괴를 겪게 됩니다. 아래 차트는 1990년대 후반의 투자 열기와 2000년대 초반의 급격한 냉각기를 시각적으로 보여줍니다.</p>
+                    <p>**1990년대 초반**은 인터넷이 학계와 군사 분야를 넘어 일반 대중에게 확산되기 시작한 시기입니다. **1993년**에 출시된 그래픽 기반의 최초의 상업용 웹 브라우저 **모자이크(Mosaic)**는 인터넷을 텍스트 기반의 복잡한 환경에서 시각적으로 아름답고 사용하기 쉬운 공간으로 바꾸어 놓았습니다. 이후 **넷스케이프(Netscape)**와 **마이크로소프트의 인터넷 익스플로러(Internet Explorer)**가 웹 브라우저 시장을 주도하며 **'브라우저 전쟁'**을 벌이기도 했습니다. 이 시기, 인터넷의 상업적 잠재력을 알아본 수많은 기업들이 등장하며 **'닷컴(.com) 버블'**이라 불리는 투자 열풍이 불었습니다. 아마존, 이베이와 같은 초기 전자상거래 기업들이 성공을 거두었지만, 많은 닷컴 기업들은 결국 2000년대 초반에 거품이 꺼지면서 파산하고 말았습니다. 그럼에도 불구하고 이 시기의 투자와 혁신은 오늘날 우리가 사용하는 인터넷 서비스의 기반을 다지는 중요한 역할을 했습니다.</p>
+                </div>
+                <div class="mt-8 p-4 border rounded-lg bg-white shadow">
+                    <h3 class="font-semibold text-center mb-2">닷컴 버블 시기 투자 지수 (가상)</h3>
+                    <div class="chart-container h-80 md:h-96">
+                        <canvas id="dotcom-chart"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <div id="section-4" class="timeline-item scroll-mt-24">
+                <h2 class="text-2xl font-bold text-indigo-700 mb-4">4. 혁신: 소셜 미디어와 모바일 인터넷</h2>
+                <div class="prose max-w-none text-lg">
+                    <p>2000년대는 사용자가 직접 콘텐츠를 만들고 공유하는 '웹 2.0'과 스마트폰의 등장으로 인터넷 사용 환경이 극적으로 변화한 시기입니다. 소셜 미디어는 온라인 소통 방식을 바꾸었고, 모바일 인터넷은 시공간의 제약 없이 우리를 온라인 세계와 연결했습니다. 아래 차트는 시간이 지남에 따라 데스크톱 사용자 대비 모바일 인터넷 사용자가 어떻게 폭발적으로 증가했는지를 보여줍니다.</p>
+                    <p>**2000년대 중반**은 인터넷 사용의 패러다임이 크게 변화한 시기입니다. 단순히 정보를 소비하는 것을 넘어, 사용자가 직접 콘텐츠를 생산하고 공유하는 **웹 2.0 시대**가 열렸습니다. **페이스북, 트위터, 유튜브**와 같은 소셜 미디어 플랫폼들이 등장하며 사람들은 서로 연결되고 소통하는 방식을 혁신적으로 바꾸었습니다. **2007년 아이폰**의 등장은 또 다른 혁명적인 변화를 가져왔습니다. 주머니 속의 컴퓨터인 **스마트폰**이 보편화되면서, 우리는 언제 어디서나 인터넷에 접속할 수 있게 되었습니다. 이러한 **모바일 인터넷**의 확산은 위치 기반 서비스, 모바일 앱, 그리고 실시간 연결의 중요성을 부각시켰습니다. 이제 인터넷은 더 이상 책상 위의 컴퓨터에만 국한되지 않고, 우리의 일상생활 깊숙이 스며들게 되었습니다.</p>
+                </div>
+                <div class="mt-8 p-4 border rounded-lg bg-white shadow">
+                     <h3 class="font-semibold text-center mb-2">인터넷 사용자 변화 (가상 데이터)</h3>
+                    <div class="chart-container h-80 md:h-96">
+                        <canvas id="mobile-chart"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <div id="section-5" class="timeline-item scroll-mt-24">
+                <h2 class="text-2xl font-bold text-indigo-700 mb-4">5. 현재와 미래: 인공지능과 웹 3.0</h2>
+                <div class="prose max-w-none text-lg">
+                     <p>현재 인터넷은 인공지능(AI)을 통해 더욱 스마트해지고 있으며, 블록체인 기술에 기반한 '웹 3.0'이라는 새로운 패러다임을 맞이하고 있습니다. 웹 3.0은 데이터의 소유권을 사용자에게 돌려주는 탈중앙화된 인터넷을 지향합니다. 인공지능, 웹 3.0, 메타버스 등 미래 인터넷을 구성할 핵심 개념들을 아래 인터랙티브 맵을 통해 탐색해보세요.</p>
+                    <p>**2010년대 후반**부터 **2020년대**에 이르기까지, 인터넷은 다시 한번 큰 변화의 기로에 서 있습니다. **인공지능(AI)**은 검색 엔진부터 콘텐츠 추천 시스템에 이르기까지 인터넷의 거의 모든 분야에 적용되고 있으며, 사용자 경험을 맞춤화하고 자동화하는 핵심 기술로 자리 잡았습니다. 또한, **블록체인 기술**을 기반으로 한 **웹 3.0**의 개념이 부상하고 있습니다. 이는 탈중앙화된 네트워크를 통해 사용자에게 데이터와 자산에 대한 소유권을 돌려주고, 투명하고 안전한 인터넷 환경을 구축하려는 움직임입니다. 메타버스, 가상현실(VR), 증강현실(AR) 기술 역시 인터넷의 물리적 경계를 허물며 새로운 디지털 세계를 창조하고 있습니다. 인터넷은 계속해서 진화하며 우리의 삶과 사회를 끊임없이 재구성하고 있습니다. 미래의 인터넷은 어떤 모습일까요? 사용자 중심의 웹 3.0이 현실화될지, 아니면 새로운 기술이 또 다른 패러다임을 가져올지 지켜보는 것은 흥미로운 일입니다.</p>
+                </div>
+                <div class="mt-8 p-4 border rounded-lg bg-white shadow">
+                    <h3 class="font-semibold text-center mb-4">미래 인터넷 핵심 개념</h3>
+                    <div class="flex justify-center gap-4 mb-4">
+                        <button class="concept-btn bg-indigo-200 px-4 py-2 rounded-lg" data-concept="ai">인공지능 (AI)</button>
+                        <button class="concept-btn bg-indigo-200 px-4 py-2 rounded-lg" data-concept="web3">웹 3.0</button>
+                        <button class="concept-btn bg-indigo-200 px-4 py-2 rounded-lg" data-concept="metaverse">메타버스</button>
+                    </div>
+                    <div id="concept-display" class="p-4 bg-gray-100 rounded-lg min-h-[150px] text-center transition-all duration-300">
+                        <p>알고 싶은 개념을 클릭하세요.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+
+            // Navbar scroll handling
+            const sections = document.querySelectorAll('div[id^="section-"]');
+            const navLinks = document.querySelectorAll('.nav-link');
+
+            const observerOptions = {
+                root: null,
+                rootMargin: '0px',
+                threshold: 0.4
+            };
+
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        navLinks.forEach(link => {
+                            link.classList.remove('active');
+                            if (link.getAttribute('href').substring(1) === entry.target.id) {
+                                link.classList.add('active');
+                            }
+                        });
+                    }
+                });
+            }, observerOptions);
+
+            sections.forEach(section => {
+                observer.observe(section);
+            });
+            
+            navLinks.forEach(anchor => {
+                anchor.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    document.querySelector(this.getAttribute('href')).scrollIntoView({
+                        behavior: 'smooth'
+                    });
+                });
+            });
+
+
+            // Section 1: Packet Switching Simulation
+            const packetCanvas = document.getElementById('packet-canvas');
+            const startPacketSimBtn = document.getElementById('start-packet-sim');
+            if (packetCanvas && startPacketSimBtn) {
+                const ctx = packetCanvas.getContext('2d');
+                let animationFrameId;
+
+                const nodes = [
+                    { x: 50, y: 100, name: 'UCLA' },
+                    { x: 250, y: 100, name: 'SRI' },
+                    { x: 50, y: 200, name: 'UCSB' },
+                    { x: 250, y: 200, name: 'UTAH' }
+                ];
+                let packets = [];
+
+                function drawNetwork() {
+                    ctx.clearRect(0, 0, packetCanvas.width, packetCanvas.height);
+                    ctx.strokeStyle = '#cbd5e1';
+                    ctx.beginPath();
+                    ctx.moveTo(nodes[0].x, nodes[0].y); ctx.lineTo(nodes[1].x, nodes[1].y);
+                    ctx.moveTo(nodes[0].x, nodes[0].y); ctx.lineTo(nodes[2].x, nodes[2].y);
+                    ctx.moveTo(nodes[1].x, nodes[1].y); ctx.lineTo(nodes[3].x, nodes[3].y);
+                    ctx.moveTo(nodes[2].x, nodes[2].y); ctx.lineTo(nodes[3].x, nodes[3].y);
+                    ctx.moveTo(nodes[0].x, nodes[0].y); ctx.lineTo(nodes[3].x, nodes[3].y);
+                    ctx.stroke();
+
+                    nodes.forEach(node => {
+                        ctx.beginPath();
+                        ctx.arc(node.x, node.y, 10, 0, Math.PI * 2);
+                        ctx.fillStyle = '#4f46e5';
+                        ctx.fill();
+                        ctx.fillStyle = '#333';
+                        ctx.fillText(node.name, node.x - 15, node.y - 15);
+                    });
+                }
+
+                function animatePackets() {
+                    ctx.clearRect(0, 0, packetCanvas.width, packetCanvas.height);
+                    drawNetwork();
+                    let allArrived = true;
+                    packets.forEach(packet => {
+                        if (packet.progress < 1) {
+                            allArrived = false;
+                            const target = nodes[packet.path[packet.step]];
+                            const start = nodes[packet.path[packet.step-1]];
+                            const dx = target.x - start.x;
+                            const dy = target.y - start.y;
+                            
+                            packet.x = start.x + dx * packet.progress;
+                            packet.y = start.y + dy * packet.progress;
+                            packet.progress += 0.02;
+
+                            if (packet.progress >= 1) {
+                                packet.progress = 0;
+                                packet.step++;
+                                if (packet.step >= packet.path.length) {
+                                    packet.progress = 1; // Mark as arrived
+                                }
+                            }
+                        }
+                         ctx.fillStyle = packet.color;
+                         ctx.fillRect(packet.x - 4, packet.y - 4, 8, 8);
+                    });
+
+                    if (!allArrived) {
+                        animationFrameId = requestAnimationFrame(animatePackets);
+                    } else {
+                       startPacketSimBtn.disabled = false;
+                       startPacketSimBtn.innerText = "다시 시작";
+                    }
+                }
+
+                startPacketSimBtn.addEventListener('click', () => {
+                    cancelAnimationFrame(animationFrameId);
+                    startPacketSimBtn.disabled = true;
+                    packets = [
+                        { x: nodes[0].x, y: nodes[0].y, path: [0, 1, 3], step: 1, progress: 0, color: 'rgba(239, 68, 68, 0.8)'},
+                        { x: nodes[0].x, y: nodes[0].y, path: [0, 2, 3], step: 1, progress: 0, color: 'rgba(59, 130, 246, 0.8)'},
+                        { x: nodes[0].x, y: nodes[0].y, path: [0, 3], step: 1, progress: 0, color: 'rgba(16, 185, 129, 0.8)'}
+                    ];
+                    animatePackets();
+                });
+                packetCanvas.width = packetCanvas.offsetWidth;
+                packetCanvas.height = packetCanvas.offsetHeight;
+                drawNetwork();
+            }
+
+            // Section 2: WWW Interactive
+            const connectTcpBtn = document.getElementById('connect-tcp');
+            const tcpLine = document.getElementById('tcp-line');
+            const doc2 = document.getElementById('doc2');
+            
+            if(connectTcpBtn && tcpLine && doc2) {
+                connectTcpBtn.addEventListener('click', () => {
+                    tcpLine.style.width = '40%';
+                    connectTcpBtn.innerText = "연결됨!";
+                    connectTcpBtn.disabled = true;
+                });
+
+                doc2.addEventListener('click', () => {
+                   alert("Doc 2를 클릭하면 하이퍼링크를 통해 다른 문서(Doc 1)로 이동하는 개념을 나타냅니다.");
+                });
+            }
+
+            // Section 3: Dot-com Bubble Chart
+            const dotcomCtx = document.getElementById('dotcom-chart');
+            if (dotcomCtx) {
+                new Chart(dotcomCtx, {
+                    type: 'line',
+                    data: {
+                        labels: ['1995', '1996', '1997', '1998', '1999', '2000', '2001', '2002'],
+                        datasets: [{
+                            label: '인터넷 투자 지수',
+                            data: [10, 25, 60, 150, 400, 500, 100, 80],
+                            borderColor: '#4f46e5',
+                            backgroundColor: 'rgba(79, 70, 229, 0.1)',
+                            fill: true,
+                            tension: 0.3
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        scales: { y: { beginAtZero: true } }
+                    }
+                });
+            }
+
+            // Section 4: Mobile Shift Chart
+            const mobileCtx = document.getElementById('mobile-chart');
+            if (mobileCtx) {
+                new Chart(mobileCtx, {
+                    type: 'bar',
+                    data: {
+                        labels: ['2008', '2011', '2014', '2017', '2020'],
+                        datasets: [{
+                                label: '데스크톱 사용자',
+                                data: [8, 15, 18, 16, 14],
+                                backgroundColor: '#60a5fa',
+                            },
+                            {
+                                label: '모바일 사용자',
+                                data: [1, 5, 15, 30, 50],
+                                backgroundColor: '#3b82f6',
+                            }
+                        ]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        scales: {
+                            x: { stacked: true },
+                            y: { stacked: true, beginAtZero: true, ticks: { callback: value => value + '억' }}
+                        },
+                        plugins: {
+                            tooltip: { callbacks: { label: (context) => `${context.dataset.label}: ${context.raw}억 명` } }
+                        }
+                    }
+                });
+            }
+
+            // Section 5: Future Concepts
+            const conceptButtons = document.querySelectorAll('.concept-btn');
+            const conceptDisplay = document.getElementById('concept-display');
+            const concepts = {
+                ai: {
+                    title: '🤖 인공지능 (AI)',
+                    text: '기계가 인간처럼 학습하고, 추론하고, 문제를 해결하는 기술입니다. AI는 검색 결과, 콘텐츠 추천, 음성 비서 등 인터넷 서비스 전반을 개인에게 맞춤화하고 있습니다.'
+                },
+                web3: {
+                    title: '🌐 웹 3.0',
+                    text: '블록체인 기술을 기반으로 한 탈중앙화된 차세대 인터넷입니다. 데이터 소유권을 거대 기업이 아닌 사용자 개인에게 돌려주어, 더 투명하고 공정한 웹 생태계를 만드는 것을 목표로 합니다.'
+                },
+                metaverse: {
+                    title: '👓 메타버스',
+                    text: '현실 세계와 같은 사회·경제·문화 활동이 이뤄지는 3차원 가상세계를 의미합니다. VR/AR 기기를 통해 사용자들은 더 몰입감 있는 디지털 경험을 하고, 새로운 방식으로 소통하고 협업할 수 있습니다.'
+                }
+            };
+
+            conceptButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    const conceptKey = button.dataset.concept;
+                    const conceptData = concepts[conceptKey];
+                    conceptDisplay.innerHTML = `
+                        <h4 class="font-bold text-xl mb-2">${conceptData.title}</h4>
+                        <p>${conceptData.text}</p>
+                    `;
+                    conceptButtons.forEach(btn => btn.classList.replace('bg-indigo-600', 'bg-indigo-200').removeProperty('color'));
+                    button.classList.replace('bg-indigo-200', 'bg-indigo-600');
+                    button.style.color = 'white';
+                });
+            });
+        });
+    </script>
+
+</body>
+</html>
+
