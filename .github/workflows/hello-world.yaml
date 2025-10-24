@@ -8,4 +8,4 @@ job:
   cicd:
     runs-on: ubuntu-latest
     steps:
-      - run: echo hello-world,cicd
+      - run: echo hello-world
